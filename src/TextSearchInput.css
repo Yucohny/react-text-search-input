@@ -1,0 +1,186 @@
+.find-box {
+    position: fixed;
+    top: 5%;
+    z-index: 3001;
+    max-height: 48px;
+    min-height: 30px;
+    right: 30px;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box !important;
+    padding: 6px;
+    visibility: visible;
+    background: #fff;
+    box-shadow: 0px 6px 16px 0px rgba(38, 44, 64, 0.12);
+    border: 1px solid #DCDEE2;
+    border-radius: 4px;
+}
+
+.find-input {
+    width: 168px;
+    outline: 0;
+    line-height: 1.15;
+    border: 1px solid #aaa;
+    background: #fff;
+    margin-right: 6px;
+    border-radius: 2px;
+    color: #000
+}
+
+.find-matches {
+    color: #aaa;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    max-width: 64px;
+    overflow: hidden;
+    margin-right: 4px;
+}
+
+.find-case {
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    -webkit-user-select: none;
+    color: #aaa;
+    padding: 0px 2px;
+    border-radius: 2px;
+    border: 1px solid transparent;
+    margin-right: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.find-back {
+    cursor: pointer;
+    -webkit-user-select: none;
+    position: relative;
+    height: 20px;
+    width: 20px;
+    border-radius: 2px;
+    overflow: hidden;
+    display: inline-block;
+    background: #fff;
+    border: 0px solid #fff;
+}
+
+.find-back:hover {
+    background: #F2F0F4;
+}
+
+.find-forward {
+    cursor: pointer;
+    -webkit-user-select: none;
+    position: relative;
+    height: 20px;
+    width: 20px;
+    border-radius: 2px;
+    overflow: hidden;
+    display: inline-block;
+    background: #fff;
+    border: 0px solid #fff;
+}
+
+.find-forward:hover {
+    background: #F2F0F4;
+}
+
+.find-close {
+    cursor: pointer;
+    -webkit-user-select: none;
+    position: relative;
+    height: 20px;
+    width: 20px;
+    overflow: hidden;
+    display: inline-block;
+    background: #fff;
+    border-radius: 2px;
+}
+
+.find-close:hover {
+    background: #F2F0F4;
+}
+
+.find-back-line {
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-bottom-color: #aaa;
+    position: absolute;
+    top: 0px;
+    left: 3px;
+}
+
+.find-back-cover {
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-bottom-color: inherit;
+    position: absolute;
+    top: 2px;
+    left: 3px;
+    z-index: 1001;
+}
+
+.find-forward-line {
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-top-color: #aaa;
+    position: absolute;
+    top: 8px;
+    left: 3px;
+}
+
+.find-forward-cover {
+    width: 0;
+    height: 0;
+    border: 7px solid transparent;
+    border-top-color: inherit;
+    position: absolute;
+    top: 6px;
+    left: 3px;
+    z-index: 1001;
+}
+
+.find-close-inner-one {
+    width: 14px;
+    height: 2px;
+    background-color: #aaa;
+    transform: rotate(45deg);
+    position: absolute;
+    top: 9px;
+    left: 3px;
+}
+
+.find-close-inner-two {
+    width: 14px;
+    height: 2px;
+    background-color: #aaa;
+    transform: rotate(-45deg);
+    position: absolute;
+    top: 9px;
+    left: 3px;
+}
+
+.lock {
+    opacity: .6;
+    pointer-events: none;
+}
+
+.unlock {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.onCase {
+    border-color: #F2F0F4 !important;
+    background-color: #F2F0F4 !important;
+}
+
+.offCase {
+    border-color: transparent !important;
+    background-color: transparent !important;
+}
