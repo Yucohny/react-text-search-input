@@ -1,8 +1,8 @@
 {
   "name": "react-text-search-input",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "A React input component for searching text within a page.",
-  "main": "index.js",
+  "main": "dist/TextSearchInput.js",
   "scripts": {
     "precompile": "rm -rf dist && tsc -b tsconfig.json"
   },
