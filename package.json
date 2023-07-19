@@ -1,0 +1,17 @@
+{
+  "name": "react-text-search-input",
+  "version": "1.0.0",
+  "description": "A React input component for searching text within a page.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yucohny/react-text-search-input.git"
+  },
+  "author": "Yucohny <yucohny@163.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Yucohny/react-text-search-input/issues"
+  },
+  "homepage": "https://github.com/Yucohny/react-text-search-input#readme"
+}
