@@ -40,29 +40,6 @@ export function TextSearchInput(props: TextSearchInputProps) {
   // @ts-ignore
   const [activeHighlight] = React.useState<Highlight>(new Highlight())
 
-  React.useEffect(() => {
-    const findBox = document.getElementById('find-box')!
-    findBox.style.top = `${typeof positionOptions!.top === 'number' ? positionOptions!.top + 'px' : positionOptions!.top}`
-    findBox.style.right = `${typeof positionOptions!.right === 'number' ? positionOptions!.right + 'px' : positionOptions!.right}`
-    const styleNode = document.createElement('style')
-    styleNode.innerHTML = `
-      ::highlight(highlight) {
-        background-color: yellow;
-      }
-      ::highlight(active-highlight) {
-        background-color: orange;
-      }
-    `
-    document.head.appendChild(styleNode)
-    // @ts-ignore
-    CSS.highlights.set('highlight', colorHighlight)
-    // @ts-ignore
-    CSS.highlights.set('active-highlight', activeHighlight)
-    return () => {
-      document.head.removeChild(styleNode)
-    }
-  }, [positionOptions, activeHighlight, colorHighlight])
-
   const handleFindNext = (forward: boolean = true) => {
     if (state.pointer === 0 || ranges.length === 0) {
       return
@@ -77,18 +54,6 @@ export function TextSearchInput(props: TextSearchInputProps) {
     newState.pointer = newPointer
     setState(newState)
     handleUpdateState(newState)
-  }
-
-  const handleUpdateState = (__state: TextSearchInputState) => {
-    activeHighlight.clear()
-    activeHighlight.add(ranges[__state.pointer - 1])
-    const newState = { ...__state }
-    newState.findMatches = `${ranges.length + 1 - __state.pointer}/${colorHighlight.size}`
-    setState(newState)
-    const rangeElement = ranges[__state.pointer - 1].commonAncestorContainer.parentElement
-    if (rangeElement !== null) {
-      rangeElement.scrollIntoView()
-    }
   }
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -144,38 +109,19 @@ export function TextSearchInput(props: TextSearchInputProps) {
     }
   }
 
-  const handleFindStart = (__state: TextSearchInputState) => {
-    colorHighlight.clear()
+  const handleUpdateState = React.useCallback((__state: TextSearchInputState) => {
     activeHighlight.clear()
-    ranges.splice(0, ranges.length)
+    activeHighlight.add(ranges[__state.pointer - 1])
     const newState = { ...__state }
-    newState.pointer = 0
-    newState.findMatches = '0/0'
-    newState.isLocked = true
+    newState.findMatches = `${ranges.length + 1 - __state.pointer}/${colorHighlight.size}`
     setState(newState)
-    if (newState.isComposition) {
-      return
+    const rangeElement = ranges[__state.pointer - 1].commonAncestorContainer.parentElement
+    if (rangeElement !== null) {
+      rangeElement.scrollIntoView()
     }
-    if (newState.inputValue === '') {
-      return
-    }
-    findInPage(newState)
-  }
+  }, [activeHighlight, colorHighlight, ranges])
 
-  const findInPage = (__state: TextSearchInputState) => {
-    find(root!, __state.inputValue, __state.isCase)
-    const newState = { ...__state }
-    if (colorHighlight.size === 0) {
-      newState.isLocked = true
-      setState(newState)
-    } else {
-      newState.isLocked = false
-      newState.pointer = ranges.length
-      handleUpdateState(newState)
-    }
-  }
-
-  const find = (node: ChildNode | HTMLElement, text: string, isCase: boolean) => {
+  const find = React.useCallback((node: ChildNode | HTMLElement, text: string, isCase: boolean) => {
     const children = node.childNodes
 
     if (
@@ -208,7 +154,71 @@ export function TextSearchInput(props: TextSearchInputProps) {
         find(child, text, isCase)
       }
     }
-  }
+  }, [colorHighlight, ranges])
+
+  const findInPage = React.useCallback((__state: TextSearchInputState) => {
+    find(root!, __state.inputValue, __state.isCase)
+    const newState = { ...__state }
+    if (colorHighlight.size === 0) {
+      newState.isLocked = true
+      setState(newState)
+    } else {
+      newState.isLocked = false
+      newState.pointer = ranges.length
+      handleUpdateState(newState)
+    }
+  }, [root, colorHighlight, ranges, find, handleUpdateState])
+
+  const handleFindStart = React.useCallback((__state: TextSearchInputState) => {
+    colorHighlight.clear()
+    activeHighlight.clear()
+    ranges.splice(0, ranges.length)
+    const newState = { ...__state }
+    newState.pointer = 0
+    newState.findMatches = '0/0'
+    newState.isLocked = true
+    setState(newState)
+    if (newState.isComposition) {
+      return
+    }
+    if (newState.inputValue === '') {
+      return
+    }
+    findInPage(newState)
+  }, [activeHighlight, colorHighlight, ranges, findInPage])
+
+  React.useEffect(() => {
+    const findBox = document.getElementById('find-box')!
+    findBox.style.top = `${typeof positionOptions!.top === 'number' ? positionOptions!.top + 'px' : positionOptions!.top}`
+    findBox.style.right = `${typeof positionOptions!.right === 'number' ? positionOptions!.right + 'px' : positionOptions!.right}`
+    const styleNode = document.createElement('style')
+    styleNode.innerHTML = `
+      ::highlight(highlight) {
+        background-color: yellow;
+      }
+      ::highlight(active-highlight) {
+        background-color: orange;
+      }
+    `
+    document.head.appendChild(styleNode)
+    // @ts-ignore
+    CSS.highlights.set('highlight', colorHighlight)
+    // @ts-ignore
+    CSS.highlights.set('active-highlight', activeHighlight)
+    const observer = new MutationObserver(() => {
+      handleFindStart(state)
+    })
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      characterData: true,
+    })
+    return () => {
+      document.head.removeChild(styleNode)
+      observer.disconnect()
+    }
+  }, [root, positionOptions, state, activeHighlight, colorHighlight, handleFindStart])
 
   const Input = (
     <div 
